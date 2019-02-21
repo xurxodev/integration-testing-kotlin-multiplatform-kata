@@ -1,26 +1,10 @@
-group 'com.xurxodev'
-version '0.0.1'
-
-buildscript {
-    ext.kotlin_version = '1.3.21'
-
-    repositories {
-        maven { url "https://kotlin.bintray.com/kotlinx" }
-        maven { url "https://plugins.gradle.org/m2/" }
-        maven { url "https://dl.bintray.com/jetbrains/kotlin-native-dependencies" }
-
-        google()
-        jcenter()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:3.3.1'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlin_version"
-    }
+plugins {
+    id 'kotlin-multiplatform' version '1.3.21'
+    id 'kotlinx-serialization' version '1.3.21'
 }
 
-apply plugin: 'kotlin-multiplatform'
-apply plugin: 'kotlinx-serialization'
+group 'com.xurxodev'
+version '0.0.1'
 
 repositories {
     google()
@@ -28,9 +12,10 @@ repositories {
     maven { url "https://kotlin.bintray.com/kotlinx" }
 }
 
-
 kotlin {
     def serialization_version = "0.10.0"
+    def ktor_version = "1.1.2"
+    def coroutines_version = "1.1.1"
 
     targets {
         fromPreset(presets.jvm, 'jvm')
@@ -46,20 +31,30 @@ kotlin {
         commonMain {
             dependencies {
                 implementation 'org.jetbrains.kotlin:kotlin-stdlib-common'
-                api "org.jetbrains.kotlinx:kotlinx-serialization-runtime-common:$serialization_version"
+                implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime-common:$serialization_version"
+
+                implementation "io.ktor:ktor-client-core:$ktor_version"
+                implementation "io.ktor:ktor-client-json:$ktor_version"
             }
         }
         commonTest {
             dependencies {
                 implementation 'org.jetbrains.kotlin:kotlin-test-common'
                 implementation 'org.jetbrains.kotlin:kotlin-test-annotations-common'
+
+                api "io.ktor:ktor-client-mock:$ktor_version"
+                api "org.jetbrains.kotlinx:kotlinx-coroutines-core-common:$coroutines_version"
             }
         }
         jvmMain {
             dependencies {
                 implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
 
-                api "org.jetbrains.kotlinx:kotlinx-serialization-runtime:$serialization_version"
+                implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime:$serialization_version"
+
+                implementation "io.ktor:ktor-client-core-jvm:$ktor_version"
+                implementation "io.ktor:ktor-client-json-jvm:$ktor_version"
+                implementation "io.ktor:ktor-client-okhttp:$ktor_version"
             }
         }
         jvmTest {
@@ -67,38 +62,37 @@ kotlin {
                 implementation 'junit:junit:4.12'
                 implementation 'org.jetbrains.kotlin:kotlin-test'
                 implementation 'org.jetbrains.kotlin:kotlin-test-junit'
+
+                api "io.ktor:ktor-client-mock-jvm:$ktor_version"
+                api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
             }
         }
         iOSMain {
             dependencies {
-                api "org.jetbrains.kotlinx:kotlinx-serialization-runtime-native:$serialization_version"
+                implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime-native:$serialization_version"
+
+                implementation "io.ktor:ktor-client-ios:$ktor_version"
+                implementation "io.ktor:ktor-client-core-native:$ktor_version"
+                implementation "io.ktor:ktor-client-json-native:$ktor_version"
             }
 
         }
         iOSTest {
+            dependencies {
+                api "io.ktor:ktor-client-mock-native:$ktor_version"
+                api "org.jetbrains.kotlinx:kotlinx-coroutines-core-native:$coroutines_version"
+            }
         }
     }
 }
 
-task packForXCode(type: Sync) {
-    final File frameworkDir = new File(buildDir, "xcode-frameworks")
-    final String mode = project.findProperty("XCODE_CONFIGURATION")?.toUpperCase() ?: 'DEBUG'
-
-    inputs.property "mode", mode
-    dependsOn kotlin.targets.iOS.compilations.main.linkTaskName("FRAMEWORK", mode)
-
-    from { kotlin.targets.iOS.compilations.main.getBinary("FRAMEWORK", mode).parentFile }
-    into frameworkDir
-
-    doLast {
-        new File(frameworkDir, 'gradlew').with {
-            text = "#!/bin/bash\nexport 'JAVA_HOME=${System.getProperty("java.home")}'\ncd '${rootProject.rootDir}'\n./gradlew \$@\n"
-            setExecutable(true)
-        }
+tasks.withType(Test) {
+    testLogging {
+        exceptionFormat "full"
+        events "passed", "failed"
+        showStandardStreams true
     }
 }
-
-tasks.build.dependsOn packForXCode
 
 configurations {
     ktlint
