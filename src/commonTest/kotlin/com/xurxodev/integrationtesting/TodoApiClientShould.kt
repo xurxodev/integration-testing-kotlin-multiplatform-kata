@@ -33,8 +33,6 @@ class TodoApiClientShould {
 
         val tasksResponse = apiClient.getAllTasks()
 
-        assertTrue(tasksResponse.isRight)
-
         tasksResponse.fold(
             { fail() },
             { right ->
