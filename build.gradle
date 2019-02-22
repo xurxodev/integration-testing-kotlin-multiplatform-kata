@@ -20,8 +20,8 @@ kotlin {
     targets {
         fromPreset(presets.jvm, 'jvm')
 
-        final def iOSTarget = System.getenv('SDK_NAME')?.startsWith("iphoneos")   \
-                                ? presets.iosArm64 : presets.iosX64
+        final def iOSTarget = System.getenv('SDK_NAME')?.startsWith("iphoneos")    \
+                                 ? presets.iosArm64 : presets.iosX64
 
         fromPreset(iOSTarget, 'iOS') {
             compilations.main.outputKinds('FRAMEWORK')
@@ -85,6 +85,16 @@ kotlin {
         }
     }
 }
+
+task iosTest {
+    doLast {
+        def binary = kotlin.targets.iOS.compilations.test.getBinary('EXECUTABLE', 'DEBUG')
+        exec {
+            commandLine 'xcrun', 'simctl', 'spawn', "iPhone XR", binary.absolutePath
+        }
+    }
+}
+tasks.check.dependsOn iosTest
 
 tasks.withType(Test) {
     testLogging {

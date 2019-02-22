@@ -1,4 +1,5 @@
-language: java
+  osx_image: xcode10.1
+  language: objective-c
 
-script:
+  script:
   - ./gradlew build

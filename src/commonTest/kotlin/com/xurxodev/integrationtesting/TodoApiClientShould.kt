@@ -55,9 +55,6 @@ class TodoApiClientShould {
         httpStatusCode: Int = 200
     ): TodoApiClient {
         val httpMockEngine = MockEngine {
-
-            println("!!!url $url")
-
             when (url.encodedPath) {
                 "$endpointSegment" -> {
                     MockHttpResponse(
