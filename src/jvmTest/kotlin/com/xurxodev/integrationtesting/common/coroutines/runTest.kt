@@ -1,4 +1,4 @@
-package com.xurxodev.integrationtesting.common
+package com.xurxodev.integrationtesting.common.coroutines
 
 import kotlinx.coroutines.runBlocking
 

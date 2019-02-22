@@ -1,18 +1,9 @@
 package com.xurxodev.integrationtesting
 
+import com.xurxodev.integrationtesting.common.api.TodoApiMockEngine
+import com.xurxodev.integrationtesting.common.coroutines.runTest
 import com.xurxodev.integrationtesting.common.responses.getTasksResponse
-import com.xurxodev.integrationtesting.common.runTest
 import com.xurxodev.integrationtesting.model.Task
-import io.ktor.client.engine.mock.MockEngine
-import io.ktor.client.engine.mock.MockHttpResponse
-import io.ktor.http.ContentType
-import io.ktor.http.HttpHeaders
-import io.ktor.http.HttpStatusCode
-import io.ktor.http.fullPath
-import io.ktor.http.headersOf
-import kotlinx.coroutines.io.ByteReadChannel
-import kotlinx.io.charsets.Charsets
-import kotlinx.io.core.toByteArray
 import todoapiclient.fold
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -23,6 +14,17 @@ import kotlin.test.fail
 class TodoApiClientShould {
     companion object {
         private const val ALL_TASK_SEGMENT = "/todos"
+    }
+
+    private val todoApiMockEngine = TodoApiMockEngine()
+
+    @Test
+    fun `send accept header`() = runTest {
+        val apiClient = givenAMockTodoApiClient(ALL_TASK_SEGMENT, getTasksResponse())
+
+        apiClient.getAllTasks()
+
+        todoApiMockEngine.verifyRequestContainsHeader("Accept", "application/json")
     }
 
     @Test
@@ -54,22 +56,8 @@ class TodoApiClientShould {
         responseBody: String,
         httpStatusCode: Int = 200
     ): TodoApiClient {
-        val httpMockEngine = MockEngine {
-            when (url.encodedPath) {
-                "$endpointSegment" -> {
-                    MockHttpResponse(
-                        call,
-                        HttpStatusCode.fromValue(httpStatusCode),
-                        ByteReadChannel(responseBody.toByteArray(Charsets.UTF_8)),
-                        headersOf(HttpHeaders.ContentType to listOf(ContentType.Application.Json.toString()))
-                    )
-                }
-                else -> {
-                    error("Unhandled ${url.fullPath}")
-                }
-            }
-        }
+        todoApiMockEngine.enqueueMockResponse(endpointSegment, responseBody, httpStatusCode)
 
-        return TodoApiClient(httpMockEngine)
+        return TodoApiClient(todoApiMockEngine.get())
     }
 }
