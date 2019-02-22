@@ -1,5 +1,6 @@
 package com.xurxodev.integrationtesting.common.api
 
+import com.xurxodev.integrationtesting.common.FileReader
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.MockHttpRequest
 import io.ktor.client.engine.mock.MockHttpResponse
@@ -19,10 +20,12 @@ class TodoApiMockEngine {
 
     fun enqueueMockResponse(
         endpointSegment: String,
-        responseBody: String,
+        responseFile: String,
         httpStatusCode: Int = 200
     ) {
-        mockResponse = MockResponse(endpointSegment, responseBody, httpStatusCode)
+        val responseJson = FileReader().readFile(responseFile)
+
+        mockResponse = MockResponse(endpointSegment, responseJson, httpStatusCode)
     }
 
     fun get() = MockEngine {
