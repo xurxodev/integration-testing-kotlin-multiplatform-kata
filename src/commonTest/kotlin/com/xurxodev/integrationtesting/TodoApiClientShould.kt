@@ -8,7 +8,7 @@ import com.xurxodev.integrationtesting.common.responses.getTaskByIdResponse
 import com.xurxodev.integrationtesting.common.responses.getTasksResponse
 import com.xurxodev.integrationtesting.common.responses.updateTaskRequest
 import com.xurxodev.integrationtesting.common.responses.updateTaskResponse
-import com.xurxodev.integrationtesting.error.HttpError
+import com.xurxodev.integrationtesting.error.UnknownError
 import com.xurxodev.integrationtesting.error.ItemNotFoundError
 import com.xurxodev.integrationtesting.model.Task
 import todoapiclient.fold
@@ -61,7 +61,7 @@ class TodoApiClientShould {
             val tasksResponse = apiClient.getAllTasks()
 
             tasksResponse.fold(
-                { left -> assertEquals(HttpError(500), left) },
+                { left -> assertEquals(UnknownError(500), left) },
                 { right -> fail("Should return left but was right: $right") })
         }
 
@@ -97,7 +97,7 @@ class TodoApiClientShould {
             val taskResponse = apiClient.getTasksById(ANY_TASK_ID)
 
             taskResponse.fold(
-                { left -> assertEquals(HttpError(500), left) },
+                { left -> assertEquals(UnknownError(500), left) },
                 { right -> fail("Should return left but was right: $right") })
         }
 
@@ -132,7 +132,7 @@ class TodoApiClientShould {
             val taskResponse = apiClient.addTask(ANY_TASK)
 
             taskResponse.fold(
-                { left -> assertEquals(HttpError(500), left) },
+                { left -> assertEquals(UnknownError(500), left) },
                 { right -> fail("Should return left but was right: $right") })
         }
 
@@ -177,7 +177,7 @@ class TodoApiClientShould {
             val taskResponse = apiClient.updateTask(ANY_TASK)
 
             taskResponse.fold(
-                { left -> assertEquals(HttpError(500), left) },
+                { left -> assertEquals(UnknownError(500), left) },
                 { right -> fail("Should return left but was right: $right") })
         }
 
@@ -200,7 +200,7 @@ class TodoApiClientShould {
             val taskResponse = apiClient.deleteTask(ANY_TASK_ID)
 
             taskResponse.fold(
-                { left -> assertEquals(HttpError(500), left) },
+                { left -> assertEquals(UnknownError(500), left) },
                 { right -> fail("Should return left but was right: $right") })
         }
 
