@@ -27,7 +27,12 @@ class TodoApiClient constructor(
 
     private val client: HttpClient = HttpClient(httpClientEngine!!) {
         install(JsonFeature) {
-            serializer = KotlinxSerializer()
+            serializer = KotlinxSerializer().apply {
+                // It's necessary register the serializer because:
+                // Obtaining serializer from KClass is not available on native
+                // due to the lack of reflection
+                register(Task.serializer())
+            }
         }
     }
 
@@ -39,6 +44,14 @@ class TodoApiClient constructor(
         val tasks = Json.nonstrict.parse(Task.serializer().list, tasksJson)
 
         Either.Right(tasks)
+    } catch (e: Exception) {
+        handleError(e)
+    }
+
+    suspend fun getTasksById(id: String): Either<ApiError, Task> = try {
+        val task = client.get<Task>("$BASE_ENDPOINT/todos/$id")
+
+        Either.Right(task)
     } catch (e: Exception) {
         handleError(e)
     }
