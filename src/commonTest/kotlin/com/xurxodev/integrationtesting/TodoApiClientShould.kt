@@ -6,6 +6,8 @@ import com.xurxodev.integrationtesting.common.responses.addTaskRequest
 import com.xurxodev.integrationtesting.common.responses.addTaskResponse
 import com.xurxodev.integrationtesting.common.responses.getTaskByIdResponse
 import com.xurxodev.integrationtesting.common.responses.getTasksResponse
+import com.xurxodev.integrationtesting.common.responses.updateTaskRequest
+import com.xurxodev.integrationtesting.common.responses.updateTaskResponse
 import com.xurxodev.integrationtesting.error.HttpError
 import com.xurxodev.integrationtesting.error.ItemNotFoundError
 import com.xurxodev.integrationtesting.model.Task
@@ -123,7 +125,7 @@ class TodoApiClientShould {
     }
 
     @Test
-    fun `return http error 500 if server response internal server error adding a new  task`() =
+    fun `return http error 500 if server response internal server error adding a new task`() =
         runTest {
             val apiClient = givenAMockTodoApiClient(ALL_TASK_SEGMENT, httpStatusCode = 500)
 
@@ -133,6 +135,74 @@ class TodoApiClientShould {
                 { left -> assertEquals(HttpError(500), left) },
                 { right -> fail("Should return left but was right: $right") })
         }
+
+    @Test
+    fun `send the correct body updating a new task`() = runTest {
+        val apiClient = givenAMockTodoApiClient(TASK_SEGMENT, updateTaskResponse())
+
+        apiClient.updateTask(ANY_TASK)
+
+        todoApiMockEngine.verifyRequestBody(updateTaskRequest())
+    }
+
+    @Test
+    fun `return task and parses it properly updating a new task`() = runTest {
+        val apiClient = givenAMockTodoApiClient(TASK_SEGMENT, addTaskResponse())
+
+        val taskResponse = apiClient.updateTask(ANY_TASK)
+
+        taskResponse.fold(
+            { left -> fail("Should return right but was left: $left") },
+            { right ->
+                assertTaskContainsExpectedValues(right)
+            })
+    }
+
+    @Test
+    fun `return item not found error if there is no task updating it`() = runTest {
+        val apiClient = givenAMockTodoApiClient(TASK_SEGMENT, httpStatusCode = 404)
+
+        val taskResponse = apiClient.updateTask(ANY_TASK)
+
+        taskResponse.fold(
+            { left -> assertEquals(ItemNotFoundError, left) },
+            { right -> fail("Should return left but was right: $right") })
+    }
+
+    @Test
+    fun `return http error 500 if server response internal server error updating a task`() =
+        runTest {
+            val apiClient = givenAMockTodoApiClient(TASK_SEGMENT, httpStatusCode = 500)
+
+            val taskResponse = apiClient.updateTask(ANY_TASK)
+
+            taskResponse.fold(
+                { left -> assertEquals(HttpError(500), left) },
+                { right -> fail("Should return left but was right: $right") })
+        }
+
+    /*
+    *    @Test
+    fun returnsItemNotFoundIfThereIsNoTaskWithIdTheAssociateId() {
+        enqueueMockResponse(404)
+
+        val error = apiClient.deleteTaskById(ANY_TASK_ID)
+
+        assertEquals(ItemNotFoundError, error)
+    }
+
+    @Test
+    fun returnsUnknownErrorIfThereIsAnyErrorDeletingTask() {
+        enqueueMockResponse(418)
+
+        val error = apiClient.deleteTaskById(ANY_TASK_ID)
+
+        assertEquals(UnknownApiError(418), error)
+    }
+
+
+
+    * */
 
     private fun assertTaskContainsExpectedValues(task: Task?) {
         assertTrue(task != null)

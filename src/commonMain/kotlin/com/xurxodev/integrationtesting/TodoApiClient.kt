@@ -70,6 +70,17 @@ class TodoApiClient constructor(
         handleError(e)
     }
 
+    suspend fun updateTask(task: Task): Either<ApiError, Task> = try {
+        val taskResponse = client.post<Task>("$BASE_ENDPOINT/todos/${task.id}") {
+            contentType(ContentType.Application.Json)
+            body = task
+        }
+
+        Either.Right(taskResponse)
+    } catch (e: Exception) {
+        handleError(e)
+    }
+
     private fun handleError(exception: Exception): Either<ApiError, Nothing> =
         when (exception) {
             is IOException -> {
