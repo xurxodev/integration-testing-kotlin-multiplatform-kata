@@ -181,28 +181,28 @@ class TodoApiClientShould {
                 { right -> fail("Should return left but was right: $right") })
         }
 
-    /*
-    *    @Test
-    fun returnsItemNotFoundIfThereIsNoTaskWithIdTheAssociateId() {
-        enqueueMockResponse(404)
+    @Test
+    fun `return item not found error if there is no task deleting it`() = runTest {
+        val apiClient = givenAMockTodoApiClient(TASK_SEGMENT, httpStatusCode = 404)
 
-        val error = apiClient.deleteTaskById(ANY_TASK_ID)
+        val taskResponse = apiClient.deleteTask(ANY_TASK_ID)
 
-        assertEquals(ItemNotFoundError, error)
+        taskResponse.fold(
+            { left -> assertEquals(ItemNotFoundError, left) },
+            { right -> fail("Should return left but was right: $right") })
     }
 
     @Test
-    fun returnsUnknownErrorIfThereIsAnyErrorDeletingTask() {
-        enqueueMockResponse(418)
+    fun `return http error 500 if server response internal server error deleting a task`() =
+        runTest {
+            val apiClient = givenAMockTodoApiClient(TASK_SEGMENT, httpStatusCode = 500)
 
-        val error = apiClient.deleteTaskById(ANY_TASK_ID)
+            val taskResponse = apiClient.deleteTask(ANY_TASK_ID)
 
-        assertEquals(UnknownApiError(418), error)
-    }
-
-
-
-    * */
+            taskResponse.fold(
+                { left -> assertEquals(HttpError(500), left) },
+                { right -> fail("Should return left but was right: $right") })
+        }
 
     private fun assertTaskContainsExpectedValues(task: Task?) {
         assertTrue(task != null)

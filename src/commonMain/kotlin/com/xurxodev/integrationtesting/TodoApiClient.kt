@@ -11,8 +11,10 @@ import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.features.BadResponseStatusException
 import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.features.json.serializer.KotlinxSerializer
+import io.ktor.client.request.delete
 import io.ktor.client.request.get
 import io.ktor.client.request.post
+import io.ktor.client.request.put
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import kotlinx.io.IOException
@@ -71,12 +73,20 @@ class TodoApiClient constructor(
     }
 
     suspend fun updateTask(task: Task): Either<ApiError, Task> = try {
-        val taskResponse = client.post<Task>("$BASE_ENDPOINT/todos/${task.id}") {
+        val taskResponse = client.put<Task>("$BASE_ENDPOINT/todos/${task.id}") {
             contentType(ContentType.Application.Json)
             body = task
         }
 
         Either.Right(taskResponse)
+    } catch (e: Exception) {
+        handleError(e)
+    }
+
+    suspend fun deleteTask(id: String): Either<ApiError, Boolean> = try {
+        client.delete<String>("$BASE_ENDPOINT/todos/$id")
+
+        Either.Right(true)
     } catch (e: Exception) {
         handleError(e)
     }
