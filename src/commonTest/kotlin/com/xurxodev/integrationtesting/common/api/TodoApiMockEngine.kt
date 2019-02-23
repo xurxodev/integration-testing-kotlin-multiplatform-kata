@@ -3,6 +3,7 @@ package com.xurxodev.integrationtesting.common.api
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.MockHttpRequest
 import io.ktor.client.engine.mock.MockHttpResponse
+import io.ktor.content.TextContent
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
@@ -14,8 +15,8 @@ import kotlinx.io.core.toByteArray
 import kotlin.test.assertEquals
 
 class TodoApiMockEngine {
-    lateinit var mockResponse: MockResponse
-    var lastRequest: MockHttpRequest? = null
+    private lateinit var mockResponse: MockResponse
+    private var lastRequest: MockHttpRequest? = null
 
     fun enqueueMockResponse(
         endpointSegment: String,
@@ -46,5 +47,11 @@ class TodoApiMockEngine {
     fun verifyRequestContainsHeader(key: String, expectedValue: String) {
         val value = lastRequest!!.headers[key]
         assertEquals(expectedValue, value)
+    }
+
+    fun verifyRequestBody(addTaskRequest: String) {
+        val body = (lastRequest!!.content as TextContent).text
+
+        assertEquals(addTaskRequest, body)
     }
 }

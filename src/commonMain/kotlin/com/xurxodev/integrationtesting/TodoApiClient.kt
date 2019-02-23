@@ -12,6 +12,9 @@ import io.ktor.client.features.BadResponseStatusException
 import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.features.json.serializer.KotlinxSerializer
 import io.ktor.client.request.get
+import io.ktor.client.request.post
+import io.ktor.http.ContentType
+import io.ktor.http.contentType
 import kotlinx.io.IOException
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.list
@@ -52,6 +55,17 @@ class TodoApiClient constructor(
         val task = client.get<Task>("$BASE_ENDPOINT/todos/$id")
 
         Either.Right(task)
+    } catch (e: Exception) {
+        handleError(e)
+    }
+
+    suspend fun addTask(task: Task): Either<ApiError, Task> = try {
+        val taskResponse = client.post<Task>("$BASE_ENDPOINT/todos") {
+            contentType(ContentType.Application.Json)
+            body = task
+        }
+
+        Either.Right(taskResponse)
     } catch (e: Exception) {
         handleError(e)
     }

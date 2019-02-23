@@ -2,6 +2,8 @@ package com.xurxodev.integrationtesting
 
 import com.xurxodev.integrationtesting.common.api.TodoApiMockEngine
 import com.xurxodev.integrationtesting.common.coroutines.runTest
+import com.xurxodev.integrationtesting.common.responses.addTaskRequest
+import com.xurxodev.integrationtesting.common.responses.addTaskResponse
 import com.xurxodev.integrationtesting.common.responses.getTaskByIdResponse
 import com.xurxodev.integrationtesting.common.responses.getTasksResponse
 import com.xurxodev.integrationtesting.error.HttpError
@@ -20,6 +22,8 @@ class TodoApiClientShould {
 
         private const val ALL_TASK_SEGMENT = "/todos"
         private const val TASK_SEGMENT = "/todos/$ANY_TASK_ID"
+
+        private val ANY_TASK = Task(1, 1, "delectus aut autem", false)
     }
 
     private val todoApiMockEngine = TodoApiMockEngine()
@@ -89,6 +93,41 @@ class TodoApiClientShould {
             val apiClient = givenAMockTodoApiClient(TASK_SEGMENT, httpStatusCode = 500)
 
             val taskResponse = apiClient.getTasksById(ANY_TASK_ID)
+
+            taskResponse.fold(
+                { left -> assertEquals(HttpError(500), left) },
+                { right -> fail("Should return left but was right: $right") })
+        }
+
+    @Test
+    fun `send the correct body adding a new task`() = runTest {
+        val apiClient =
+            givenAMockTodoApiClient(ALL_TASK_SEGMENT, addTaskResponse(), httpStatusCode = 201)
+
+        apiClient.addTask(ANY_TASK)
+
+        todoApiMockEngine.verifyRequestBody(addTaskRequest())
+    }
+
+    @Test
+    fun `return task and parses it properly adding a new task`() = runTest {
+        val apiClient = givenAMockTodoApiClient(ALL_TASK_SEGMENT, addTaskResponse())
+
+        val taskResponse = apiClient.addTask(ANY_TASK)
+
+        taskResponse.fold(
+            { left -> fail("Should return right but was left: $left") },
+            { right ->
+                assertTaskContainsExpectedValues(right)
+            })
+    }
+
+    @Test
+    fun `return http error 500 if server response internal server error adding a new  task`() =
+        runTest {
+            val apiClient = givenAMockTodoApiClient(ALL_TASK_SEGMENT, httpStatusCode = 500)
+
+            val taskResponse = apiClient.addTask(ANY_TASK)
 
             taskResponse.fold(
                 { left -> assertEquals(HttpError(500), left) },
