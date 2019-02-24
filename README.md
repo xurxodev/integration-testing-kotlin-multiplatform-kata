@@ -4,17 +4,17 @@
 This kata is a Kotlin multiplatform version of the kata [KataTODOApiClientKotlin][KataTODOApiClientKotlin] of [Karumi][karumi].
 
 - We are here to practice integration testing using HTTP stubbing. 
-- We are going to use [KtorClientMock][ktorclientmock] to return stub responses from a HTTP server.
-- We are going to use [KotlinTest][kotlintest] to perform assertions.
+- We are going to use [KtorClientMock][ktorclientmock] to return stub responses.
+- We are going to use [KotlinTest][kotlintest] to write tests and to perform assertions.
 - We are going to practice pair programming.
 
 ---
 
 ## Getting started
 
-This repository contains an kotlin multiplatform library with an API client to interact with a remote service we can use to implement an application.
+This repository contains an kotlin multiplatform library with an API client to interact with the [JSONPlaceholder service](http://jsonplaceholder.typicode.com).
 
-This API Client is based on one class with name ``TodoApiClient`` containing some methods to interact with the API. Using this class we can get all the tasks we have created before, get a task using the task id, add a new task, update a task or delete an already created task.
+This API Client is based on one class with name ``TodoApiClient`` containing some methods to interact with the API. Using this class we can get all the tasks, get a task using the task id, add a new task, update a task or delete an already created task.
 
 The API client has been implemented using a multiplatform networking framework named [Ktor][ktor]. Review the project documentation if needed.
 
@@ -33,8 +33,8 @@ My recommendation for this exercise is:
     4. Execute `TodoApiClientShould` and watch the only test it contains pass.
 
   * To help you get started, these are some tests already written at `TodoApiClientShould ` class. Review it carefully before to start writing your own tests. Here you have the description of some tests you can write to start working on this Kata:
-	1. Test that the ``Accept`` and ``ContentType`` headers are sent.
-    2. Test that the list of ``TaskDto`` instances obtained invoking the getter method of the property ``allTasks``  contains the expected values.
+	1. Test that the ``Accept`` headers are sent.
+    2. Test that the list of ``Task`` instances obtained invoking the getter method of the property ``allTasks``  contains the expected values.
     3. Test that the request is sent to the correct path using the correct HTTP method.
     4. Test that adding a task the body sent to the server is the correct one.
 
@@ -43,13 +43,12 @@ My recommendation for this exercise is:
 * If you get stuck, `master` branch contains all the tests already solved.
 
 * You will find some utilities to help you test the APIClient easily in:
-  ``MockWebServerTest`` and the test resources directory.
+  ``TodoApiMockEngine`` and the common/responses directory in commonTest source set.
 
 ## Extra Tasks
 
 If you've covered all the application functionality using integration tests you can continue with some extra tasks: 
 
-* Replace some integration tests we have created with unit tests. A starting point could be the ``DefaultHeadersInterceptor`` class.
 * Create your own API client to consume one of the services described in this web: [http://jsonplaceholder.typicode.com/][jsonplaceholder]
 
 ---
