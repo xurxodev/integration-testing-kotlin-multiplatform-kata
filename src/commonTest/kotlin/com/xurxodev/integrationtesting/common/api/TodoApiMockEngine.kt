@@ -6,6 +6,7 @@ import io.ktor.client.engine.mock.MockHttpResponse
 import io.ktor.content.TextContent
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
+import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.fullPath
 import io.ktor.http.headersOf
@@ -53,5 +54,21 @@ class TodoApiMockEngine {
         val body = (lastRequest!!.content as TextContent).text
 
         assertEquals(addTaskRequest, body)
+    }
+
+    fun verifyGetRequest() {
+        assertEquals(HttpMethod.Get.value, lastRequest!!.method.value)
+    }
+
+    fun verifyPostRequest() {
+        assertEquals(HttpMethod.Post.value, lastRequest!!.method.value)
+    }
+
+    fun verifyPutRequest() {
+        assertEquals(HttpMethod.Put.value, lastRequest!!.method.value)
+    }
+
+    fun verifyDeleteRequest() {
+        assertEquals(HttpMethod.Delete.value, lastRequest!!.method.value)
     }
 }

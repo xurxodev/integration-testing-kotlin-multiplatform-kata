@@ -40,6 +40,15 @@ class TodoApiClientShould {
     }
 
     @Test
+    fun `send request with get http verb getting all task`() = runTest {
+        val apiClient = givenAMockTodoApiClient(ALL_TASK_SEGMENT, getTasksResponse())
+
+        apiClient.getAllTasks()
+
+        todoApiMockEngine.verifyGetRequest()
+    }
+
+    @Test
     fun `return tasks and parses it properly`() = runTest {
         val apiClient = givenAMockTodoApiClient(ALL_TASK_SEGMENT, getTasksResponse())
 
@@ -64,6 +73,15 @@ class TodoApiClientShould {
                 { left -> assertEquals(UnknownError(500), left) },
                 { right -> fail("Should return left but was right: $right") })
         }
+
+    @Test
+    fun `send request with get http verb getting getting by id`() = runTest {
+        val apiClient = givenAMockTodoApiClient(TASK_SEGMENT, getTaskByIdResponse())
+
+        apiClient.getTasksById(ANY_TASK_ID)
+
+        todoApiMockEngine.verifyGetRequest()
+    }
 
     @Test
     fun `return task and parses it properly getting by id`() = runTest {
@@ -102,6 +120,16 @@ class TodoApiClientShould {
         }
 
     @Test
+    fun `send request with post http verb adding a new task`() = runTest {
+        val apiClient =
+            givenAMockTodoApiClient(ALL_TASK_SEGMENT, addTaskResponse(), httpStatusCode = 201)
+
+        apiClient.addTask(ANY_TASK)
+
+        todoApiMockEngine.verifyPostRequest()
+    }
+
+    @Test
     fun `send the correct body adding a new task`() = runTest {
         val apiClient =
             givenAMockTodoApiClient(ALL_TASK_SEGMENT, addTaskResponse(), httpStatusCode = 201)
@@ -135,6 +163,15 @@ class TodoApiClientShould {
                 { left -> assertEquals(UnknownError(500), left) },
                 { right -> fail("Should return left but was right: $right") })
         }
+
+    @Test
+    fun `send request with put http verb updating a task`() = runTest {
+        val apiClient = givenAMockTodoApiClient(TASK_SEGMENT, updateTaskResponse())
+
+        apiClient.updateTask(ANY_TASK)
+
+        todoApiMockEngine.verifyPutRequest()
+    }
 
     @Test
     fun `send the correct body updating a new task`() = runTest {
@@ -180,6 +217,15 @@ class TodoApiClientShould {
                 { left -> assertEquals(UnknownError(500), left) },
                 { right -> fail("Should return left but was right: $right") })
         }
+
+    @Test
+    fun `send request with delete http verb deleting a task`() = runTest {
+        val apiClient = givenAMockTodoApiClient(TASK_SEGMENT, httpStatusCode = 200)
+
+        apiClient.deleteTask(ANY_TASK_ID)
+
+        todoApiMockEngine.verifyDeleteRequest()
+    }
 
     @Test
     fun `return item not found error if there is no task deleting it`() = runTest {
