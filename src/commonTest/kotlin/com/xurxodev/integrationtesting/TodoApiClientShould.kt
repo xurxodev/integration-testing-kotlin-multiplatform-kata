@@ -61,8 +61,7 @@ class TodoApiClientShould {
                 assertTaskContainsExpectedValues(right[0])
             })
     }
-
-
+    
     private fun assertTaskContainsExpectedValues(task: Task?) {
         assertTrue(task != null)
         assertEquals(task.id, 1)
