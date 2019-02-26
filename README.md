@@ -60,7 +60,7 @@ There are some links which can be useful to finish these tasks:
 * [KtorMockClient official documentation][ktorclientmock]
 * [Kotlin Test documentation][kotlintest]
 * [Ktor documentation][ktor]
-* [Test de integración en Kotlin Multiplatform][test-de-integracion-en-kotlin-multiplatform]
+* [Cómo crear un cliente API REST y sus tests de integración en Kotlin Multiplatform][cliente-api-rest-y-test-de-integracion-en-kotlin-multiplatform]
 
 # License
 
@@ -82,7 +82,7 @@ limitations under the License.
 [ktorclientmock]: https://ktor.io/clients/http-client/testing.html
 [kotlintest]: https://kotlinlang.org/api/latest/kotlin.test/index.html
 [jsonplaceholder]: http://jsonplaceholder.typicode.com/
-[test-de-integracion-en-kotlin-multiplatform]: http://xurxodev.com/test-de-integracion-en-kotlin-multiplatform
+[cliente-api-rest-y-test-de-integracion-en-kotlin-multiplatform]: http://xurxodev.com/cliente-api-rest-y-test-de-integracion-en-kotlin-multiplatform
 [ktor]: https://ktor.io/
 [KataTODOApiClientKotlin]: https://github.com/Karumi/KataTODOApiClientKotlin
 [karumi]: https://github.com/Karumi
