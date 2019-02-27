@@ -1,6 +1,8 @@
 ![xurxodev logo][xurxodevlogo] 
 # Integration Testing for Kotlin multiplatform [![Build Status](https://travis-ci.org/xurxodev/integration-testing-kotlin-multiplatform-kata.svg?branch=master)](https://travis-ci.org/xurxodev/integration-testing-kotlin-multiplatform-kata)
 
+![](http://xurxodev.com/content/images/2019/02/Kotlin-multiplatform-library.png)
+
 This kata is a Kotlin multiplatform version of the kata [KataTODOApiClientKotlin][KataTODOApiClientKotlin] of [Karumi][karumi].
 
 - We are here to practice integration testing using HTTP stubbing. 
