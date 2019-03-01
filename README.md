@@ -62,7 +62,8 @@ There are some links which can be useful to finish these tasks:
 * [KtorMockClient official documentation][ktorclientmock]
 * [Kotlin Test documentation][kotlintest]
 * [Ktor documentation][ktor]
-* [Cómo crear un cliente API REST y sus tests de integración en Kotlin Multiplatform][cliente-api-rest-y-test-de-integracion-en-kotlin-multiplatform]
+* [How to create a REST API client and its integration tests in Kotlin Multiplatform][how-to-create-a-rest-api-client-and-its-integration-tests-in-kotlin-multiplatform] (English version)
+* [Cómo crear un cliente API REST y sus tests de integración en Kotlin Multiplatform][cliente-api-rest-y-test-de-integracion-en-kotlin-multiplatform] (Spanish version)
 
 # License
 
@@ -85,6 +86,7 @@ limitations under the License.
 [kotlintest]: https://kotlinlang.org/api/latest/kotlin.test/index.html
 [jsonplaceholder]: http://jsonplaceholder.typicode.com/
 [cliente-api-rest-y-test-de-integracion-en-kotlin-multiplatform]: http://xurxodev.com/cliente-api-rest-y-test-de-integracion-en-kotlin-multiplatform
+[how-to-create-a-rest-api-client-and-its-integration-tests-in-kotlin-multiplatform]: https://medium.com/@xurxodev/how-to-create-a-rest-api-client-and-its-integration-tests-in-kotlin-multiplatform-d76c9a1be348
 [ktor]: https://ktor.io/
 [KataTODOApiClientKotlin]: https://github.com/Karumi/KataTODOApiClientKotlin
 [karumi]: https://github.com/Karumi
