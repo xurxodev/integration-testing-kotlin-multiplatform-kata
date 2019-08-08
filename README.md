@@ -1,5 +1,7 @@
-![xurxodev logo][xurxodevlogo] 
-# Integration Testing for Kotlin multiplatform [![Build Status](https://travis-ci.org/xurxodev/integration-testing-kotlin-multiplatform-kata.svg?branch=master)](https://travis-ci.org/xurxodev/integration-testing-kotlin-multiplatform-kata) [![Awesome Kotlin Badge](https://kotlin.link/awesome-kotlin.svg)](https://github.com/KotlinBy/awesome-kotlin#examples-back-)
+
+# ![integration-testing-kotlin-multiplatform](https://user-images.githubusercontent.com/5593590/62697749-b78da300-b9db-11e9-92e4-329ce3d39bd9.png)
+
+[![Build Status](https://travis-ci.org/xurxodev/integration-testing-kotlin-multiplatform-kata.svg?branch=master)](https://travis-ci.org/xurxodev/integration-testing-kotlin-multiplatform-kata) [![Awesome Kotlin Badge](https://kotlin.link/awesome-kotlin.svg)](https://github.com/KotlinBy/awesome-kotlin#examples-back-)
 
 ![](http://xurxodev.com/content/images/2019/02/Kotlin-multiplatform-library.png)
 
